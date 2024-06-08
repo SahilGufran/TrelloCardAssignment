@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trello Card</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        form {
+            display: flex;
+            flex-direction:column;
+            max-width: 300px;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        input, textarea {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            justify-content: center;
+            padding: 10px;
+            background-color: #090909;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #6c6e6c;
+        }
+    </style>
+</head>
+<body>
+    <h1>Trello Card</h1>
+    <form id="trelloForm">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="e.g Rahul" required>
+
+        <label for="description">Description</label>
+        <textarea id="description" name="description" placeholder="enter you description" required></textarea>
+
+        <label for="dueDate">Due Date</label>
+        <input type="date" id="dueDate" name="dueDate" required>
+
+        <label for="startDate">Start Date</label>
+        <input type="date" id="startDate" name="startDate" required>
+
+        <button type="submit">Create Card</button>
+    </form>
+
+    <script>
+        document.getElementById('trelloForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const data = {
+                name: formData.get('name'),
+                description: formData.get('description'),
+                dueDate: formData.get('dueDate'),
+                startDate: formData.get('startDate'),
+            };
+
+            const response = await fetch('/create-card', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert('Card created successfully!');
+            } else {
+                alert('Failed to create card.');
+            }
+        });
+    </script>
+</body>
+</html>
